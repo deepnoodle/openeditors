@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OpenEditorsV2
+Bundle-SymbolicName: OpenEditorsV2;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: deepnoodle
+Require-Bundle: org.eclipse.jface,
+ org.eclipse.e4.ui.di,
+ org.eclipse.e4.ui.services,
+ org.eclipse.e4.core.di.annotations,
+ org.eclipse.core.resources;bundle-version="3.11.0",
+ org.eclipse.core.runtime;bundle-version="3.12.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: javax.annotation;version="1.2.0",
+ org.eclipse.ui,
+ org.eclipse.ui.part,
+ org.eclipse.ui.plugin
+Bundle-ClassPath: .,
+ lib/gson-2.3.1.jar
+Bundle-Activator: com.deepnoodle.openeditors.Activator
+Bundle-ActivationPolicy: lazy
+
