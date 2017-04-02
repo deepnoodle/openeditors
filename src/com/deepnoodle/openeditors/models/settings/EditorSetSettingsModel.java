@@ -7,8 +7,8 @@ import com.deepnoodle.openeditors.models.editor.EditorComparator;
 import com.deepnoodle.openeditors.models.editor.EditorComparator.SortType;
 
 public class EditorSetSettingsModel {
-	private String name = "DEFAULT";
-	private SortType sortBy = EditorComparator.SortType.ACCESS;;
+	private String name;
+	private SortType sortBy = EditorComparator.SortType.ACCESS;
 
 	private Map<String, EditorSettingsModel> editorModels = new TreeMap<>();
 

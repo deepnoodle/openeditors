@@ -2,16 +2,20 @@ package com.deepnoodle.openeditors.models.settings;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.swt.graphics.RGB;
 
+import com.deepnoodle.openeditors.Constants;
+
 public class SettingsModel {
 
+	//TODO extract away eclipse reference, store as separate values or hex
 	private RGB highlightColor = new RGB(219, 219, 219);
 	private RGB pinnedColor = new RGB(60, 15, 175);
 	private RGB dirtyColor = new RGB(204, 0, 0);
 
-	private String activeSetName = "DEFAULT";
+	private String activeSetName = Constants.OPEN_EDITORS_SET_NAME;
 	private Map<String, EditorSetSettingsModel> editorSettingsSets = new HashMap<>();
 
 	public SettingsModel() {
@@ -66,6 +70,10 @@ public class SettingsModel {
 
 	public EditorSetSettingsModel getEditorSettingsSet(String name) {
 		return getEditorSettingsSets().get(name);
+	}
+
+	public Set<String> getSets() {
+		return getEditorSettingsSets().keySet();
 	}
 
 }

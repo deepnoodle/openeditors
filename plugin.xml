@@ -18,9 +18,9 @@
       </category>
       <view
             name="Open Editors"
-            icon="icons/Sample.png"
+            icon="icons/deepnoodle.ico"
             category="deepnoodle"
-            class="com.deepnoodle.openeditors.views.openeditors.EditorsView"
+            class="com.deepnoodle.openeditors.views.openeditors.OpenEditorsMainView"
             id="EditorsView">
       </view>
    </extension> 

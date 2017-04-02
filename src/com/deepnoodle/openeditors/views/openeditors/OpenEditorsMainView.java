@@ -1,16 +1,22 @@
 package com.deepnoodle.openeditors.views.openeditors;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -21,15 +27,14 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.deepnoodle.openeditors.actions.LoadSetAction;
 import com.deepnoodle.openeditors.actions.SaveSetAction;
-import com.deepnoodle.openeditors.actions.sort.SortByAccessAction;
-import com.deepnoodle.openeditors.actions.sort.SortByNameAction;
-import com.deepnoodle.openeditors.actions.sort.SortByPathAction;
-import com.deepnoodle.openeditors.logging.LogWrapper;
+import com.deepnoodle.openeditors.actions.SortAction;
 import com.deepnoodle.openeditors.models.editor.Editor;
+import com.deepnoodle.openeditors.models.editor.EditorComparator;
+import com.deepnoodle.openeditors.models.settings.SettingsModel;
 import com.deepnoodle.openeditors.services.EditorService;
+import com.deepnoodle.openeditors.services.SettingsService;
 
-public class EditorsView extends ViewPart {
-	private static LogWrapper log = new LogWrapper(EditorsView.class);
+public class OpenEditorsMainView extends ViewPart {
 
 	private EditorService editorService = EditorService.getInstance();
 
@@ -55,9 +60,18 @@ public class EditorsView extends ViewPart {
 		//Create a builder somewhere else
 		Action saveSetAction = new SaveSetAction();
 		Action loadSetAction = new LoadSetAction(getSite());
-		Action sortByAccessAction = new SortByAccessAction(editorTableView.getSorter());
-		Action sortByNameAction = new SortByNameAction(editorTableView.getSorter());
-		Action sortByPathAction = new SortByPathAction(editorTableView.getSorter());
+		Action sortByAccessAction = new SortAction(editorTableView,
+				EditorComparator.SortType.ACCESS,
+				"Sort by last access",
+				"Sorts the tabs by last access using eclipse navigation history");
+		Action sortByNameAction = new SortAction(editorTableView,
+				EditorComparator.SortType.NAME,
+				"Sort by name",
+				"Sorts the tabs by name");
+		Action sortByPathAction = new SortAction(editorTableView,
+				EditorComparator.SortType.PATH,
+				"Sort by path",
+				"Sort by path");
 
 		//hookContextMenu();
 
@@ -71,6 +85,36 @@ public class EditorsView extends ViewPart {
 		menuManager.add(sortByAccessAction);
 
 		IToolBarManager toolbarManager = bars.getToolBarManager();
+		ControlContribution comboContribution = new ControlContribution("Sets:") {
+
+			private Combo combo;
+
+			@Override
+			protected Control createControl(Composite parent) {
+				combo = new Combo(parent, SWT.READ_ONLY);
+				SettingsModel settingsModel = SettingsService.getInstance().getOrCreateSettings();
+				Set<String> sets = settingsModel.getSets();
+				combo.setItems(sets.toArray(new String[sets.size()]));
+				//				for (String set : sets) {
+				//					combo.add(set);
+				//				}
+				//				Point selection;
+				//				combo.setSelection(selection);
+				//				combo.set
+
+				combo.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent selectionEvent) {
+						//ask to close existing editors
+						SettingsService.getInstance().getOrCreateSettings().setActiveSetName(selectionEvent.text);
+						//refresh
+					}
+				});
+				return combo;
+			}
+		};
+
+		toolbarManager.add(comboContribution);
 		toolbarManager.add(saveSetAction);
 		toolbarManager.add(loadSetAction);
 

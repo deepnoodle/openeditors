@@ -4,7 +4,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.deepnoodle.openeditors.actions.daos.SettingsDao;
+import com.deepnoodle.openeditors.Constants;
+import com.deepnoodle.openeditors.daos.SettingsDao;
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.editor.Editor;
 import com.deepnoodle.openeditors.models.editor.EditorComparator.SortType;
@@ -55,7 +56,6 @@ public class SettingsService {
 		editorSettingsSet.setEditorModels(editorModels);
 		settingsModel.setActiveSetName(setName);
 		settingsDao.saveSettings(settingsModel);
-		log.warn("Save not yet implements");
 
 	}
 
@@ -63,8 +63,7 @@ public class SettingsService {
 		SettingsModel settingsModel = getOrCreateSettings();
 
 		if (setName == settingsModel.getActiveSetName()) {
-			//TODO create constant for magic string
-			settingsModel.setActiveSetName("DEFAULT");
+			settingsModel.setActiveSetName(Constants.OPEN_EDITORS_SET_NAME);
 		}
 
 		settingsModel.getEditorSettingsSets().remove(setName);
@@ -76,6 +75,17 @@ public class SettingsService {
 	public SettingsModel getOrCreateSettings() {
 		if (settings == null) {
 			settings = settingsDao.loadSettings();
+			//Create the default set name if it doesn't exist
+			if (settings.getEditorSettingsSet(Constants.OPEN_EDITORS_SET_NAME) == null) {
+				EditorSetSettingsModel editorSetSettingsSet = new EditorSetSettingsModel();
+				editorSetSettingsSet.setSortBy(Constants.DEFAULT_SORTBY);
+				settings.getEditorSettingsSets().put(Constants.OPEN_EDITORS_SET_NAME, editorSetSettingsSet);
+
+			}
+			//If the active set is null, change it to the default set
+			if (settings.getActiveEditorSettingsSet() == null) {
+				settings.setActiveSetName(Constants.OPEN_EDITORS_SET_NAME);
+			}
 		}
 		return settings;
 	}
