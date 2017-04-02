@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.actions.daos;
+package com.deepnoodle.openeditors.daos;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
