@@ -9,12 +9,11 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 
 import com.deepnoodle.openeditors.Activator;
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.editor.Editor;
 import com.deepnoodle.openeditors.models.settings.SettingsModel;
 import com.google.gson.GsonBuilder;
 
 public class SettingsDao {
-	private static LogWrapper log = new LogWrapper(Editor.class);
+	private static LogWrapper log = new LogWrapper(SettingsDao.class);
 
 	private static final String SETS_FILE_NAME = "settings.deepnoodle";
 	private static final String SETS_ROOT = "OpenEditor";

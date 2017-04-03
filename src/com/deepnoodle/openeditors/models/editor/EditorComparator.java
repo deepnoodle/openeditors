@@ -16,8 +16,8 @@ public class EditorComparator extends ViewerComparator {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		Editor editor1 = (Editor) e1;
-		Editor editor2 = (Editor) e2;
+		IEditor editor1 = (IEditor) e1;
+		IEditor editor2 = (IEditor) e2;
 
 		int compare = Boolean.compare(editor2.isPinned(), editor1.isPinned());
 		if (compare == 0) {

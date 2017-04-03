@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-import com.deepnoodle.openeditors.models.editor.Editor;
+import com.deepnoodle.openeditors.models.editor.IEditor;
 
 class EditorViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -22,11 +22,21 @@ class EditorViewLabelProvider extends LabelProvider implements ITableLabelProvid
 
 	@Override
 	public Image getImage(Object obj) {
-		Image image;
-		if (obj instanceof Editor) {
-			image = ((Editor) obj).getReference().getTitleImage();
-		} else {
-			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
+		Image image = null;
+		if (obj instanceof IEditor) {
+			IEditor editor = ((IEditor) obj);
+			image = editor.getTitleImage();
+			if (image == null) {
+				//Load the image for the file
+				image = PlatformUI.getWorkbench().getEditorRegistry()
+						.getImageDescriptor(editor.getFilePath())
+						.createImage();
+			}
+		}
+
+		//Default to file image if none found
+		if (image == null) {
+			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 		}
 		return image;
 	}

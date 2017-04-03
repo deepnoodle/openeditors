@@ -16,6 +16,7 @@ public class SettingsModel {
 	private RGB dirtyColor = new RGB(204, 0, 0);
 
 	private String activeSetName = Constants.OPEN_EDITORS_SET_NAME;
+
 	private Map<String, EditorSetSettingsModel> editorSettingsSets = new HashMap<>();
 
 	public SettingsModel() {
@@ -74,6 +75,16 @@ public class SettingsModel {
 
 	public Set<String> getSets() {
 		return getEditorSettingsSets().keySet();
+	}
+
+	//TODO add to settings
+	public boolean keepOpenEditorsHistory() {
+		return true;
+	}
+
+	//TODO add to settings
+	public boolean stickyEditorSettings() {
+		return false;
 	}
 
 }

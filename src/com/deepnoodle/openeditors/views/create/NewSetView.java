@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.views.load;
+package com.deepnoodle.openeditors.views.create;
 
 import java.util.Map;
 
@@ -17,11 +17,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+import com.deepnoodle.openeditors.Constants;
 import com.deepnoodle.openeditors.models.settings.EditorSetSettingsModel;
 import com.deepnoodle.openeditors.services.SettingsService;
 
 //TODO clean this up
-public class LoadDialogView extends TitleAreaDialog {
+public class NewSetView extends TitleAreaDialog {
 	private static final int DELETE = 3;
 
 	private SettingsService settingsService = SettingsService.getInstance();
@@ -30,7 +31,7 @@ public class LoadDialogView extends TitleAreaDialog {
 
 	private List list;
 
-	public LoadDialogView() {
+	public NewSetView() {
 		super(new Shell());
 
 	}
@@ -38,11 +39,11 @@ public class LoadDialogView extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Open");
-		setMessage("Please pick an item from the list.");
+		setTitle("Save");
+		setMessage("Please enter a set name.");
 		setDialogHelpAvailable(false);
 		setHelpAvailable(false);
-		setTitleImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER));
+		setTitleImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ETOOL_SAVE_EDIT));
 
 	}
 
@@ -57,10 +58,10 @@ public class LoadDialogView extends TitleAreaDialog {
 	}
 
 	private void createSetList(Composite parent) {
-		Map<String, EditorSetSettingsModel> editorSets = settingsService.getOrCreateSettings().getEditorSettingsSets();
+		Map<String, EditorSetSettingsModel> editorSets = settingsService.getEditorSettingsSets();
 		List list = new List(parent, 1);
 		for (String setName : editorSets.keySet()) {
-			if (!setName.equals("DEFAULT")) {
+			if (!setName.equals(Constants.OPEN_EDITORS_SET_NAME)) {
 				list.add(setName);
 			}
 		}
@@ -71,8 +72,8 @@ public class LoadDialogView extends TitleAreaDialog {
 	protected void createButtonsForButtonBar(final Composite parent) {
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 3;
-		gridData.grabExcessHorizontalSpace = true;
+		gridData.horizontalSpan = 1;
+		gridData.grabExcessHorizontalSpace = false;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = SWT.CENTER;
 

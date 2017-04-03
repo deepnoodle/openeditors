@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -12,12 +13,11 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PartInitException;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.editor.Editor;
 import com.deepnoodle.openeditors.models.editor.EditorComparator;
 import com.deepnoodle.openeditors.models.editor.EditorComparator.SortType;
+import com.deepnoodle.openeditors.models.editor.IEditor;
 import com.deepnoodle.openeditors.services.EditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
 
@@ -36,7 +36,7 @@ public class EditorTableView implements IDoubleClickListener {
 
 	private IWorkbenchPartSite site;
 
-	private Editor activeEditor;
+	private IEditor activeEditor;
 
 	public EditorTableView(Composite parent, IWorkbenchPartSite site, IViewSite iViewSite) {
 		tableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -60,8 +60,9 @@ public class EditorTableView implements IDoubleClickListener {
 			if (tableViewer.getControl() != null && !tableViewer.getControl().isDisposed()) {
 				tableViewer.refresh();
 				TableItem[] items = tableViewer.getTable().getItems();
-
-				editorRowFormatter.formatRows(items, activeEditor, tableViewer.getTable().getForeground());
+				tableViewer.setSelection(StructuredSelection.EMPTY);
+				editorRowFormatter.formatRows(items, activeEditor, tableViewer.getTable().getForeground(),
+						tableViewer.getTable().getBackground());
 			}
 		} catch (Exception e) {
 			log.warn(e);
@@ -70,29 +71,29 @@ public class EditorTableView implements IDoubleClickListener {
 
 	public void setSortBy(EditorComparator.SortType sortBy) {
 		editorComparator.setSortBy(sortBy);
-		settingsService.getOrCreateSettings().getActiveEditorSettingsSet().setSortBy(sortBy);
+		settingsService.getActiveEditorSettingsSet().setSortBy(sortBy);
 		refresh();
 	}
 
 	@Override
 	public void doubleClick(DoubleClickEvent event) {
-		List<Editor> editors = getSelections();
-		for (Editor editor : editors) {
+		List<IEditor> editors = getSelections();
+		for (IEditor editor : editors) {
 			try {
 				openEditorService.openEditor(editor, site);
-			} catch (PartInitException e) {
+			} catch (Exception e) {
 				log.warn(e);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Editor> getSelections() {
+	public List<IEditor> getSelections() {
 		return tableViewer.getStructuredSelection().toList();
 	}
 
-	public Editor getSelection() {
-		return (Editor) tableViewer.getStructuredSelection().getFirstElement();
+	public IEditor getSelection() {
+		return (IEditor) tableViewer.getStructuredSelection().getFirstElement();
 	}
 
 	public EditorComparator getSorter() {
@@ -106,11 +107,17 @@ public class EditorTableView implements IDoubleClickListener {
 	public void setActivePart(IWorkbenchPart activePart) {
 		TableItem[] items = tableViewer.getTable().getItems();
 		for (TableItem item : items) {
-			Editor editor = ((Editor) item.getData());
-			if (editor.getReference().getPart(false) == activePart) {
+			IEditor editor = ((IEditor) item.getData());
+			if (editor.isOpened()
+					&& editor.getReference() != null
+					&& editor.getReference().getPart(false) == activePart) {
 				activeEditor = editor;
 			}
 		}
+	}
+
+	public IWorkbenchPartSite getSite() {
+		return site;
 	}
 
 }
