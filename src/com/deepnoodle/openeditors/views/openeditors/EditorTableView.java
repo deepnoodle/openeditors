@@ -31,12 +31,13 @@ public class EditorTableView implements IDoubleClickListener {
 	private EditorService openEditorService = EditorService.getInstance();
 
 	private TableViewer tableViewer;
+	private IWorkbenchPartSite site;
 
 	private EditorComparator editorComparator;
 
-	private IWorkbenchPartSite site;
-
 	private IEditor activeEditor;
+
+	private EditorItemMenuManager menuManager;
 
 	public EditorTableView(Composite parent, IWorkbenchPartSite site, IViewSite iViewSite) {
 		tableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -52,6 +53,9 @@ public class EditorTableView implements IDoubleClickListener {
 		tableViewer.setInput(iViewSite);
 
 		tableViewer.addDoubleClickListener(this);
+
+		menuManager = new EditorItemMenuManager(this, site, parent);
+		tableViewer.getTable().setMenu(menuManager.createContextMenu(parent));
 
 	}
 

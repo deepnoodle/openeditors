@@ -1,7 +1,5 @@
 package com.deepnoodle.openeditors.views.openeditors;
 
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -9,12 +7,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ViewPart;
@@ -23,15 +16,9 @@ import com.deepnoodle.openeditors.actions.ManageSetsAction;
 import com.deepnoodle.openeditors.actions.SaveSetAction;
 import com.deepnoodle.openeditors.actions.SortAction;
 import com.deepnoodle.openeditors.models.editor.EditorComparator;
-import com.deepnoodle.openeditors.models.editor.IEditor;
-import com.deepnoodle.openeditors.services.EditorService;
-import com.deepnoodle.openeditors.services.SettingsService;
 
 //TODO clean this up
 public class OpenEditorsMainView extends ViewPart {
-
-	private EditorService editorService = EditorService.getInstance();
-	private SettingsService settingsService = SettingsService.getInstance();
 
 	private EditorTableView editorTableView;
 
@@ -82,56 +69,6 @@ public class OpenEditorsMainView extends ViewPart {
 		toolbarManager.add(editorSetComboControl);
 		toolbarManager.add(loadSetAction);
 		toolbarManager.add(saveSetAction);
-
-		//Create a builder somewhere else?
-		final Menu contextMenu = new Menu(parent);
-		editorTableView.getTable().setMenu(contextMenu);
-
-		//TODO extract to own class?
-		final MenuItem pinMenuItem = new MenuItem(contextMenu, SWT.None);
-		pinMenuItem.setText("Pin");
-		pinMenuItem.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				List<IEditor> editors = editorTableView.getSelections();
-				for (IEditor editor : editors) {
-					editor.setPinned(true);
-					settingsService.saveSettings();
-				}
-				editorTableView.refresh();
-			}
-		});
-
-		final MenuItem unpinMenuItem = new MenuItem(contextMenu, SWT.None);
-		unpinMenuItem.setText("Un-Pin");
-		unpinMenuItem.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				List<IEditor> editors = editorTableView.getSelections();
-				for (IEditor editor : editors) {
-					editor.setPinned(false);
-					settingsService.saveSettings();
-				}
-				editorTableView.refresh();
-			}
-
-		});
-
-		final MenuItem closeMenuItem = new MenuItem(contextMenu, SWT.None);
-		closeMenuItem.setText("Close and Remove");
-		closeMenuItem.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				List<IEditor> editors = editorTableView.getSelections();
-				for (IEditor editor : editors) {
-					if (editor.isOpened()) {
-						editorService.closeEditor(editor, getSite());
-					}
-					settingsService.getActiveEditorSettingsSet().getEditorModels().remove(editor.getFilePath());
-				}
-				editorTableView.refresh();
-			}
-		});
 
 	}
 
