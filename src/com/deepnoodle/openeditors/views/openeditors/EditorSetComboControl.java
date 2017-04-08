@@ -71,6 +71,7 @@ public class EditorSetComboControl extends ControlContribution {
 					}
 				}
 				settingsService.setActiveSetName(selectedSetName);
+				editorTableView.setActivePart(null);
 				editorTableView.refresh();
 			}
 
