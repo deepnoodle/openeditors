@@ -5,8 +5,6 @@ import javax.annotation.PostConstruct;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -56,19 +54,18 @@ public class OpenEditorsMainView extends ViewPart {
 
 		IActionBars bars = getViewSite().getActionBars();
 		IMenuManager menuManager = bars.getMenuManager();
-		menuManager.add(loadSetAction);
-		menuManager.add(new Separator());
 		menuManager.add(sortByNameAction);
 		menuManager.add(sortByPathAction);
 
 		//TODO fix and add back in
 		//menuManager.add(sortByAccessAction);
 
-		IToolBarManager toolbarManager = bars.getToolBarManager();
-
-		toolbarManager.add(editorSetComboControl);
-		toolbarManager.add(loadSetAction);
-		toolbarManager.add(saveSetAction);
+		//TODO fix and add back in
+		//		IToolBarManager toolbarManager = bars.getToolBarManager();
+		//
+		//		toolbarManager.add(editorSetComboControl);
+		//		toolbarManager.add(loadSetAction);
+		//		toolbarManager.add(saveSetAction);
 
 	}
 

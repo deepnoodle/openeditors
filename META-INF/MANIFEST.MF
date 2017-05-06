@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Open Editors
 Bundle-SymbolicName: OpenEditorsV2;singleton:=true
-Bundle-Version: 1.0.0.1
+Bundle-Version: 2.0.0.1
 Bundle-Vendor: deepnoodle
 Require-Bundle: org.eclipse.jface,
  org.eclipse.core.resources;bundle-version="3.11.0",

@@ -50,7 +50,7 @@ public class PartListener implements IPartListener, IResourceChangeListener {
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		editorTableView.refresh();
+		//editorTableView.refresh();
 	}
 
 }
